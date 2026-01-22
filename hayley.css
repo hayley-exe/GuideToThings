@@ -2,42 +2,9 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #f4f4f4;
+  background-color: #f8f9fa;
 }
 
-header {
-  background: #35424a;
-  color: #ffffff;
-  padding: 10px 0;
-  text-align: center;
-}
-
-h1 {
-  margin: 0;
-}
-
-.container {
-  width: 80%;
-  margin: auto;
-  overflow: hidden;
-}
-
-.club-card {
-  background: #ffffff;
-  border: 1px solid #dddddd;
-  border-radius: 5px;
-  padding: 15px;
-  margin: 15px 0;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.club-card h2 {
-  margin: 0 0 10px;
-}
-
-.club-card p {
-  margin: 5px 0;
-}
 /* Menu icon */
 .menu-icon {
   width: 50px;
@@ -45,114 +12,74 @@ h1 {
   display: flex;
   justify-content: center;
   align-items: center;
-
   font-size: 30px;
   cursor: pointer;
   background-color: #333;
   color: white;
-  border-radius: 5px;
+  border-radius: 8px;
   position: fixed;
-  top: 10px;
-  left: 10px;
-  z-index: 1001;
+  top: 15px;
+  left: 15px;
+  z-index: 1100;
+  transition: background-color 0.3s;
 }
 
-/* Sidebar base (desktop by default) */
+.menu-icon:hover {
+  background-color: #555;
+}
+
+/* Sidebar – slide from left */
 .sidebar {
   position: fixed;
   top: 0;
-  left: 0;
-  width: 0;
-  height: 70px;
-  overflow: hidden;
-  background-color: transparent;
-  transition: all 0.5s ease-in-out;
+  left: -300px;
+  width: 280px;
+  height: 100vh;
+  background-color: #333;
+  color: white;
+  transition: left 0.35s ease;
   z-index: 1000;
-  display: flex;
-  align-items: center;
-  padding-left: 0;
-  box-sizing: border-box;
+  padding-top: 80px;
+  overflow-y: auto;
 }
 
 .sidebar.open {
-  width: 100vw;
-  background-color: #333;
-  padding-left: 60px;
-  padding-top: 5px;
-  padding-bottom: 10px;
-  border-bottom-right-radius: 5px;
-  border-top-right-radius: 5px;
+  left: 0;
 }
 
 .sidebar ul {
   list-style: none;
   margin: 0;
-  padding: 0 10px;
-  display: flex;
-  gap: 50px;
-  width: 100%;
-  justify-content: flex-start;
-}
-
-.sidebar ul li {
-  text-align: center;
+  padding: 0;
 }
 
 .sidebar ul li a {
+  display: block;
   color: white;
   text-decoration: none;
-  display: inline-block;
-  padding: 10px 15px;
+  padding: 16px 24px;
+  font-size: 1.1rem;
+  transition: background 0.2s;
 }
 
 .sidebar ul li a:hover {
   background-color: #444;
-  border-radius: 3px;
 }
 
-/* ---------- MOBILE DROPDOWN STYLES ---------- */
-@media (max-width: 768px) {
-  .col-12 {
-    width: 90%;
-    max-width: 100%;
-    padding-top: 10px;
-    box-sizing: border-box;
-    margin: 0 auto;
-    transform: translateX(-30px);
-  }
-  .sidebar {
-    flex-direction: column;
-    width: 100vw;
-    height: 0;
-    overflow: hidden;
-    transition: height 0.5s ease-in-out;
-    padding: 0;
-    align-items: flex-start;
-    border-radius: 0;
-    background-color: #333;
-  }
+/* Club cards */
+.club-card {
+  background: white;
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
 
-  .sidebar.open {
-    height: 100vh;
-    padding-top: 60px;
-    padding-left: 20px;
-    padding-right: 20px;
-  }
+.club-card:hover {
+  transform: translateY(-5px);
+}
 
-  .sidebar ul {
-    flex-direction: column;
-    gap: 20px;
-    width: 100%;
-  }
-
-  .sidebar ul li {
-    width: 100%;
-  }
-
-  .sidebar ul li a {
-    display: block;
-    width: 100%;
-    font-size: 18px;
-    padding: 12px 0;
-  }
+.club-card h3 {
+  margin-top: 0;
+  color: #1a3c5e;
 }

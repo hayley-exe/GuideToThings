@@ -1,51 +1,81 @@
-const clubsData = [];
-
-
-const fetchClubsData = async () => {
-    try {
-        const response = await fetch('./data/clubs.json');
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        clubsData.push(...data);
-        renderClubs();
-    } catch (error) {
-        console.error('Error fetching clubs data:', error);
-    }
-};
-
-
-const renderClubs = () => {
-    const clubsContainer = document.getElementById('clubs-container');
-    clubsContainer.innerHTML = '';
-
-
-    clubsData.forEach(club => {
-        const clubCard = createClubCard(club);
-        clubsContainer.appendChild(clubCard);
-    });
-};
-
-
-const createClubCard = (club) => {
-    const card = document.createElement('div');
-    card.classList.add('club-card');
-
-
-    card.innerHTML = `
-        <h3>${club.name}</h3>
-        <p><strong>Coach/Teacher:</strong> ${club.teacher}</p>
-        <p>${club.description}</p>
-        <p><strong>Contact:</strong> ${club.contact}</p>
-    `;
-
-
-    return card;
-};
-
-
 document.addEventListener('DOMContentLoaded', () => {
-    fetchClubsData();
-});
+    // Sidebar / menu toggle
+    const menuIcon = document.getElementById('menuIcon');
+    const sidebar = document.getElementById('sidebar');
 
+    if (menuIcon && sidebar) {
+        menuIcon.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+            menuIcon.textContent = sidebar.classList.contains('open') ? '✕' : '☰';
+        });
+
+        // Close sidebar on link click
+        document.querySelectorAll('.sidebar a').forEach(link => {
+            link.addEventListener('click', () => {
+                sidebar.classList.remove('open');
+                menuIcon.textContent = '☰';
+            });
+        });
+    }
+
+    // Card rendering – only if this page has the container
+    const container = document.getElementById('clubs-container');
+    if (!container) return;
+
+    const loading = document.getElementById('loading');
+    const errorEl = document.getElementById('error-message');
+
+    // Select correct data file
+    let jsonFile = 'clubs.json'; // fallback
+    const path = window.location.pathname.toLowerCase();
+
+    if (path.includes('pre-clubs') || path.includes('morning')) {
+        jsonFile = 'before-clubs.json';
+    } else if (path.includes('lunch-clubs')) {
+        jsonFile = 'lunch-clubs.json';
+    } else if (path.includes('after-clubs')) {
+        jsonFile = 'after-clubs.json';
+    } else if (path.includes('fsport') || path.includes('fall')) {
+        jsonFile = 'fall-sports.json';
+    } else if (path.includes('wsport') || path.includes('winter')) {
+        jsonFile = 'winter-sports.json';
+    } else if (path.includes('ssport') || path.includes('spring')) {
+        jsonFile = 'spring-sports.json';
+    }
+
+    fetch(`./data/${jsonFile}`)
+        .then(res => {
+            if (!res.ok) throw new Error(`Cannot load ${jsonFile} – status ${res.status}`);
+            return res.json();
+        })
+        .then(data => {
+            if (loading) loading.style.display = 'none';
+
+            container.innerHTML = '';
+
+            if (!data || data.length === 0) {
+                container.innerHTML = '<p class="text-center lead">No activities currently listed.</p>';
+                return;
+            }
+
+            data.forEach(item => {
+                const col = document.createElement('div');
+                col.className = 'col';
+                col.innerHTML = `
+          <div class="club-card">
+            <h3>${item.name || 'Unnamed Activity'}</h3>
+            <p><strong>Coach/Teacher:</strong> ${item.coach || item.teacher || 'TBD'}</p>
+            <p>${item.description || 'No description available.'}</p>
+            <p><strong>Contact:</strong> ${item.contact || 'N/A'}</p>
+            <p><strong>Location:</strong> ${item.location || 'TBD'}</p>
+          </div>
+        `;
+                container.appendChild(col);
+            });
+        })
+        .catch(err => {
+            console.error(err);
+            if (loading) loading.style.display = 'none';
+            if (errorEl) errorEl.style.display = 'block';
+        });
+});
